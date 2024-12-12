@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-GameObjects::Ground::Ground(int x, int y, int hp, bool hitbox, char amount_of_steps) : x(x), y(y), hp(hp), hitbox(hitbox), amount_of_steps(amount_of_steps) {}
+GameObjects::Ground::Ground(int x, int y, int hp, bool hitbox, char amount_of_steps, bool is_a_good_guy) : x(x), y(y), hp(hp), hitbox(hitbox), amount_of_steps(amount_of_steps), is_a_good_guy(is_a_good_guy) {}
 
 void GameObjects::Ground::Draw() {
 	//GoToPos(x, y);

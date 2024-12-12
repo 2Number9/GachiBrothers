@@ -1,18 +1,15 @@
 #include "GameObjects.h"
 #include <iostream>
 
-GameObjects::Shelter::Shelter(int x, int y, int hp, bool hitbox, char amount_of_steps) : x(x), y(y), hp(hp), hitbox(hitbox), amount_of_steps(amount_of_steps) {}
+GameObjects::Shelter::Shelter(int x, int y, int hp, bool hitbox, char amount_of_steps, bool is_a_good_guy) : x(x), y(y), hp(hp), hitbox(hitbox), amount_of_steps(amount_of_steps), is_a_good_guy(is_a_good_guy) {}
 
 void GameObjects::Shelter::Draw() {
-	//GoToPos(x, y);
 	wmove(stdscr, y, x);
 	wprintw(stdscr, "#");
 }
 
 void GameObjects::Shelter::Dead() {
-	//GoToPos(x, y);
-	//printw(" ");
-	//this = std::make_unique<GameObjects::Ground>(x, y, 9);
+	Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
 }
 
 void GameObjects::Shelter::Move(char direction) {}
@@ -30,7 +27,6 @@ void GameObjects::Shelter::gachi() {
 }
 
 void GameObjects::Shelter::act(char key) {
-	//Draw();
 }
 
 bool GameObjects::Shelter::IsAlive() {

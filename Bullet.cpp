@@ -1,15 +1,16 @@
 #include "GameObjects.h"
 #include <iostream>
 
-GameObjects::Bullet::Bullet(int x, int y, int hp, bool hitbox, char amount_of_steps) : x(x), y(y), hp(hp), hitbox(hitbox), amount_of_steps(amount_of_steps) {}
+GameObjects::Bullet::Bullet(int x, int y, int hp, bool hitbox, char amount_of_steps, bool is_a_good_guy) : x(x), y(y), hp(hp), hitbox(hitbox), amount_of_steps(amount_of_steps), is_a_good_guy(is_a_good_guy) {}
 
 void GameObjects::Bullet::Draw() {
-	//GoToPos(x, y);
 	wmove(stdscr, y, x);
 	wprintw(stdscr, ".");
 }
 
-void GameObjects::Bullet::Dead() {}
+void GameObjects::Bullet::Dead() {
+	
+}
 
 void GameObjects::Bullet::ReactToBullet() {
 	hp--;
@@ -22,17 +23,30 @@ void GameObjects::Bullet::gachi() {
 }
 
 void GameObjects::Bullet::Move(char key) {
-	if ((amount_of_steps != 0) || (y == 0))
+
+	if (amount_of_steps >3)
 		return;
 
-	if (Cells[(y - 1) * Field_width + x]->IsAlive()) {
-		Cells[(y - 1) * Field_width + x]->ReactToBullet();
-		Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0);
+	int offset;
+	if (is_a_good_guy == 0)
+		offset = 1;
+	else
+		offset = -1;
+
+	if (((y == 0) && (is_a_good_guy == 1)) || ((y == Field_height - 1 ) && (is_a_good_guy == 0))) {
+		Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
+		return;
+	}
+
+
+	if (Cells[(y + offset) * Field_width + x]->IsAlive()) {
+		Cells[(y + offset) * Field_width + x]->ReactToBullet();
+		Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
 	}
 	else {
 		
-		Cells[(y - 1) * Field_width + x] = std::make_unique<GameObjects::Bullet>(x, y - 1, hp, hitbox, 1);
-		Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0);
+		Cells[(y + offset) * Field_width + x] = std::make_unique<GameObjects::Bullet>(x, y + offset, hp, hitbox, amount_of_steps + 1, is_a_good_guy);
+		Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
 	}
 }
 
