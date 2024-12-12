@@ -21,29 +21,6 @@ void Intro::Init_of_window() {
 }
 
 
-void CreateRectangle(int x, int y, int width, int height, bool is_not_empty) {
-	const char** str = new (const char* [2]);
-	if (is_not_empty == 1) {
-		str[0] = "-";
-		str[1] = "|";
-	}
-	else {
-		str[0] = " ";
-		str[1] = " ";
-	}
-	for (int index_x = 0; index_x < width; index_x++) {
-		wmove(stdscr, y, x+index_x);
-		printw(str[0]);
-		wmove(stdscr, y + height - 1, x + index_x);
-		printw(str[0]);
-	}
-	for (int index_y = 0; index_y < height; index_y++) {
-		wmove(stdscr, y+index_y, x);
-		printw(str[1]);
-		wmove(stdscr, y + index_y, x + width - 1);
-		printw(str[1]);
-	}
-}
 
 int Intro::Play_Slide() {
 	const char** strs = new (const char* [4]);
@@ -144,24 +121,28 @@ void Intro::TalkToSergant() {
 	str[5] = "Sergant: I know it..Im playing computer games since CS 1.6 was born.";
 	str[6] = "This is 'S' Key Actually!";
 	str[7] = "Instructor: Unfortunately this is 'W' key";
-	str[8] = "Instructor: So..I cant leave it as it is, then let me show you some basic things:";
+	str[8] = "Instructor: I cant leave it, let me show basic things:";
 	str[9] = "Sergant: NAAAH man say what you wanna say";
-	str[10] = "If you are ready to learn some basic things press SPACE key: ";
+	str[10] = "If you're ready to learn basic things press SPACE: ";
 	for (int index = 0; index < 10; index++) {
-		wmove(stdscr, Field_height / 4 + index, Field_width / 2 - 20);
+		wmove(stdscr, Field_height / 4 + index * 2, Field_width / 2 - 29);
 		printw(str[index]);
 		refresh();
 		Sleep(50);
 	}
 	Sleep(50);
-	wmove(stdscr, Field_height / 4 + 16, Field_width / 2 + 10);
+	wmove(stdscr, Field_height / 4 + 21, Field_width / 2 + 31);
 	printw(str[10]);
-	CreateRectangle(Field_width / 2 + 10 - 1, Field_height / 4 + 16 - 1, strlen(str[10]), 3, 1);
+	CreateRectangle(Field_width / 2 + 31 - 1, Field_height / 4 + 21 - 1, strlen(str[10]), 3, 1);
 	refresh();
 	timeout(100000);
-	key = getch();
-	if (key != ERR)
-		Play_Obuchenie();
+	while (true) {
+		key = getch();
+		if (key == ' ') {
+			Play_Obuchenie();
+			break;
+		}
+	}
 }
 
 void Intro::TalkToOfficer() {
@@ -179,19 +160,23 @@ void Intro::TalkToOfficer() {
 	str[9] = "Click SPACE key to see Learning Menu";
 	clear();
 	for (int i = 0; i < 9; i++) {
-		wmove(stdscr, Field_height / 4 + i, Field_width / 2 - 20);
+		wmove(stdscr, Field_height / 4 + i*2, Field_width / 2 - 20);
 		printw(str[i]);
 		Sleep(50);
 		refresh();
 	}
-	wmove(stdscr, Field_height / 4 + 16, Field_width / 2 + 26);
+	wmove(stdscr, Field_height / 4 + 20, Field_width / 2 + 29);
 	printw(str[9]);
-	CreateRectangle(Field_width / 2 + 26 - 1, Field_height / 4 + 16 - 1, strlen(str[9]) + 2, 3, 1);
+	CreateRectangle(Field_width / 2 + 29 - 1, Field_height / 4 + 20 - 1, strlen(str[9]) + 2, 3, 1);
 	Sleep(50);
 	refresh();
-	key = getch();
-	if (key != ERR)
-		Play_Obuchenie();
+	while (true) {
+		key = getch();
+		if (key == ' ') {
+			Play_Obuchenie();
+			break;
+		}
+	}
 }
 
 void Intro::Play_Second_Slide(int choosed_one) {
@@ -222,7 +207,7 @@ void Intro::Preface_Before_Fight(int choosed_one) {
 	str[2] = "Instructor: Just remember! That how you'll show yourself will determine your further path..";
 	str[3] = "When you will ready to your mission press SPACE";
 	for (int index = 0; index < 3; index++) {
-		wmove(stdscr, Field_height / 4 + index, Field_width / 2-15);
+		wmove(stdscr, Field_height / 4 + index*2, Field_width / 2-15);
 		printw(str[index]);
 		refresh();
 		Sleep(50);
@@ -235,23 +220,23 @@ void Intro::Preface_Before_Fight(int choosed_one) {
 
 	switch (choosed_one) {
 	case 1:
-		wmove(stdscr, Field_height / 4 + 3, Field_width / 2-15);
+		wmove(stdscr, Field_height / 4 + 6, Field_width / 2-15);
 		printw("Private: Lets go Man, Im always ready");
 		refresh();
 		Sleep(100);
 		break;
 	case 2:
-		wmove(stdscr, Field_height / 4 + 3, Field_width / 2-15);
+		wmove(stdscr, Field_height / 4 + 6, Field_width / 2-15);
 		printw("Sergant: Just give me gun man I will kill everyone, you will see");
 		refresh();
 		Sleep(100);
 		break;
 	case 3:
-		wmove(stdscr, Field_height / 4 + 3, Field_width / 2-15);
+		wmove(stdscr, Field_height / 4 + 6, Field_width / 2-15);
 		printw("Officer: Hope my player remembers how to keep mouse in his hand");
 		refresh();
 		Sleep(50);
-		wmove(stdscr, Field_height / 4 + 4, Field_width / 2-15);
+		wmove(stdscr, Field_height / 4 + 8, Field_width / 2-15);
 		printw("Officer: Just kidding, lets do it");
 		refresh();
 		Sleep(100);
@@ -274,8 +259,9 @@ void Intro::Play_Intro() {
 	wmove(stdscr, Field_height / 4+3, Field_width / 2 - 3);
 	printw(str);
 
-	wmove(stdscr, Field_height / 4, Field_width / 2 + 35);
+	wmove(stdscr, Field_height / 4+16, Field_width / 2 + 35);
 	printw("Tap any key to next page");
+	CreateRectangle(Field_width / 2 + 35 - 1, Field_height / 4 + 16 - 1, strlen("Tap any key to next page")+2, 3, 1);
 	refresh();
 	timeout(10000);
 	int key;
