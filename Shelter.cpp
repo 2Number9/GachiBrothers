@@ -8,25 +8,25 @@ void GameObjects::Shelter::Draw() {
 	wprintw(stdscr, "#");
 }
 
-void GameObjects::Shelter::Dead() {
-	Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
+void GameObjects::Shelter::Dead(Context &context, Statistic &statistic) {
+	context.GetCell(x,y) = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
 }
 
-void GameObjects::Shelter::Move(char direction) {}
+void GameObjects::Shelter::Move(char direction, Context &context, Statistic& statistic) {}
 
-void GameObjects::Shelter::Shoot() {}
+void GameObjects::Shelter::Shoot(Context &context, Statistic& statistic) {}
 
-void GameObjects::Shelter::ReactToBullet() {
+void GameObjects::Shelter::ReactToBullet(Context &context, Statistic& statistic) {
 	hp--;
 	if (hp == 0)
-		Dead();
+		Dead(context, statistic);
 }
 
-void GameObjects::Shelter::gachi() {
+void GameObjects::Shelter::gachi(Context &context, Statistic& statistic) {
 	std::cout << "x == " << x << "y == " << y << std::endl;
 }
 
-void GameObjects::Shelter::act(char key) {
+void GameObjects::Shelter::act(char key, Context &context, Statistic& statistic) {
 }
 
 bool GameObjects::Shelter::IsAlive() {

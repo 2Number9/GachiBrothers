@@ -21,6 +21,29 @@ void Intro::Init_of_window() {
 }
 
 
+void Intro::Create_Rectangle(int x, int y, int width, int height, bool is_not_empty) {
+	const char** str = new (const char* [2]);
+	if (is_not_empty == 1) {
+		str[0] = "-";
+		str[1] = "|";
+	}
+	else {
+		str[0] = " ";
+		str[1] = " ";
+	}
+	for (int index_x = 0; index_x < width; index_x++) {
+		wmove(stdscr, y, x + index_x);
+		printw(str[0]);
+		wmove(stdscr, y + height - 1, x + index_x);
+		printw(str[0]);
+	}
+	for (int index_y = 0; index_y < height; index_y++) {
+		wmove(stdscr, y + index_y, x);
+		printw(str[1]);
+		wmove(stdscr, y + index_y, x + width - 1);
+		printw(str[1]);
+	}
+}
 
 int Intro::Play_Slide() {
 	const char** strs = new (const char* [4]);
@@ -46,19 +69,19 @@ int Intro::Play_Slide() {
 		printw(strs[2]);
 		wmove(stdscr, Field_height / 4 + 9, Field_width / 2 - 3);
 		printw(strs[3]);
-		CreateRectangle(start_x, start_y + offset * 3, strlen(strs[current]) + 2, 3, 1);
+		Create_Rectangle(start_x, start_y + offset * 3, strlen(strs[current]) + 2, 3, 1);
 		//im old but im still remember how to keep gun in my arms
 		//so you say
 		refresh();
 		key = getch();
 		if (((key == 's') || (key == 'S')) && (offset < 2)) {
-			CreateRectangle(start_x, start_y + offset * 3, strlen(strs[current]) + 2, 3, 0);
+			Create_Rectangle(start_x, start_y + offset * 3, strlen(strs[current]) + 2, 3, 0);
 			offset++;
 			current++;
 		}
 		else
 			if (((key == 'w') || (key == 'W')) && (offset > 0)) {
-				CreateRectangle(start_x, start_y + offset * 3, strlen(strs[current]) + 2, 3, 0);
+				Create_Rectangle(start_x, start_y + offset * 3, strlen(strs[current]) + 2, 3, 0);
 				offset--;
 				current--;
 			}
@@ -101,7 +124,7 @@ void Intro::Play_Obuchenie() {
 		wmove(stdscr, Field_height / 4 + 14, Field_width / 2 + 24);
 		str = "If you are ready to test yourself, press SPACE key";
 		printw(str);
-		CreateRectangle(Field_width / 2 + 24 - 1, Field_height / 4 + 14 - 1, strlen(str) + 2, 3, 1);
+		Create_Rectangle(Field_width / 2 + 24 - 1, Field_height / 4 + 14 - 1, strlen(str) + 2, 3, 1);
 		refresh();
 		key = getch();
 		if (key == ' ')
@@ -133,7 +156,7 @@ void Intro::TalkToSergant() {
 	Sleep(50);
 	wmove(stdscr, Field_height / 4 + 21, Field_width / 2 + 31);
 	printw(str[10]);
-	CreateRectangle(Field_width / 2 + 31 - 1, Field_height / 4 + 21 - 1, strlen(str[10]), 3, 1);
+	Create_Rectangle(Field_width / 2 + 31 - 1, Field_height / 4 + 21 - 1, strlen(str[10]), 3, 1);
 	refresh();
 	timeout(100000);
 	while (true) {
@@ -167,7 +190,7 @@ void Intro::TalkToOfficer() {
 	}
 	wmove(stdscr, Field_height / 4 + 20, Field_width / 2 + 29);
 	printw(str[9]);
-	CreateRectangle(Field_width / 2 + 29 - 1, Field_height / 4 + 20 - 1, strlen(str[9]) + 2, 3, 1);
+	Create_Rectangle(Field_width / 2 + 29 - 1, Field_height / 4 + 20 - 1, strlen(str[9]) + 2, 3, 1);
 	Sleep(50);
 	refresh();
 	while (true) {
@@ -214,7 +237,7 @@ void Intro::Preface_Before_Fight(int choosed_one) {
 	}
 	wmove(stdscr, Field_height / 4 + 16, Field_width / 2 + 26);
 	printw(str[3]);
-	CreateRectangle(Field_width / 2 + 26 - 1, Field_height / 4 + 16 - 1, strlen(str[3]) + 2, 3, 1);
+	Create_Rectangle(Field_width / 2 + 26 - 1, Field_height / 4 + 16 - 1, strlen(str[3]) + 2, 3, 1);
 	refresh();
 	Sleep(50);
 
@@ -249,7 +272,7 @@ void Intro::Preface_Before_Fight(int choosed_one) {
 	}
 }
 
-void Intro::Play_Intro() {
+void Intro::Play_Intro(GameObjects::Statistic &statistic) {
 	char* str;
 	wmove(stdscr, Field_height / 4, Field_width / 2 - 3); //вывод статистики
 	str = "This game is not just a simple game.";
@@ -258,10 +281,10 @@ void Intro::Play_Intro() {
 	str = "This is the story you writing are";
 	wmove(stdscr, Field_height / 4+3, Field_width / 2 - 3);
 	printw(str);
-
+	Create_Rectangle(Field_width / 2 - 3 - 1, Field_height / 4 - 1, strlen("This game is not just a simple game.") + 2, 6, 1);
 	wmove(stdscr, Field_height / 4+16, Field_width / 2 + 35);
 	printw("Tap any key to next page");
-	CreateRectangle(Field_width / 2 + 35 - 1, Field_height / 4 + 16 - 1, strlen("Tap any key to next page")+2, 3, 1);
+	Create_Rectangle(Field_width / 2 + 35 - 1, Field_height / 4 + 16 - 1, strlen("Tap any key to next page")+2, 3, 1);
 	refresh();
 	timeout(10000);
 	int key;
@@ -270,23 +293,16 @@ void Intro::Play_Intro() {
 	//print_ramka
 	//widelit' ramka
 	refresh();
-	Choosed_one = Play_Slide();
-	Play_Second_Slide(Choosed_one);
-	Preface_Before_Fight(Choosed_one);
+	statistic.Choosed_one = Play_Slide();
+	Play_Second_Slide(statistic.Choosed_one);
+	Preface_Before_Fight(statistic.Choosed_one);
 
 }
 
 
-void Intro::run() {
+void Intro::run(GameObjects::Statistic &statistic) {
 	Init_of_window(); //засунуть все, кроме act из GameObjects в private почти
 
-	Play_Intro();
-	
-	if (Man_alive == 1)
-		Win = 1;
-	else
-		Win = 0;
-
-
+	Play_Intro(statistic);
 
 }

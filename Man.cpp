@@ -8,43 +8,43 @@ void GameObjects::Man::Draw() {
 	wprintw(stdscr, "Z");
 }
 
-void GameObjects::Man::Move(char direction) {
+void GameObjects::Man::Move(char direction, Context &context, Statistic &statistic) {
 	if (amount_of_steps != 0)
 		return;
 	switch (direction) {
 
 	case 'w':
 	case 'W': 
-		if ((y > 0) && (Cells[(y - 1) * Field_width + x]->IsAlive() == 0)) {
-			coordinats_of_man[1]--;
-			Cells[(y-1) * Field_width + x] = std::make_unique<GameObjects::Man>(x, y-1, hp, hitbox, 1, 1);
-			Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
+		if ((y > 0) && (context.GetCell(x, y-1)->IsAlive() == 0)) {
+			statistic.Coordinats_of_man[1]--;
+			context.GetCell(x, y-1) = std::make_unique<GameObjects::Man>(x, y-1, hp, hitbox, 1, 1);
+			context.GetCell(x, y) = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
 		}
 		break;
 	case 'd':
 	case 'D':
-		if ((x < (Field_width - 1)) && (Cells[y * Field_width + (x + 1)]->IsAlive() == 0)) {
-			coordinats_of_man[0]++;
-			Cells[y * Field_width + (x + 1)] = std::make_unique<GameObjects::Man>(x + 1, y, hp, hitbox, 1, 1);
-			Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
+		if ((x < (Field_width - 1)) && (context.GetCell(x+1, y)->IsAlive() == 0)) {
+			statistic.Coordinats_of_man[0]++;
+			context.GetCell(x+1, y) = std::make_unique<GameObjects::Man>(x + 1, y, hp, hitbox, 1, 1);
+			context.GetCell(x, y) = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
 		}
 		break;
 
 	case 'a':
 	case 'A':
-		if ((x > 0) && (Cells[y * Field_width + (x - 1)]->IsAlive() == 0)) {
-			coordinats_of_man[0]--;
-			Cells[y * Field_width + (x - 1)] = std::make_unique<GameObjects::Man>(x - 1, y, hp, hitbox, 1, 1);
-			Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
+		if ((x > 0) && (context.GetCell(x-1, y)->IsAlive() == 0)) {
+			statistic.Coordinats_of_man[0]--;
+			context.GetCell(x-1,y) = std::make_unique<GameObjects::Man>(x - 1, y, hp, hitbox, 1, 1);
+			context.GetCell(x,y) = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
 		}
 		break;
 
 	case 's':
 	case 'S':
-		if ((y < (Field_height - 1)) && (Cells[(y + 1) * Field_width + x]->IsAlive() == 0)) {
-			coordinats_of_man[1]++;
-			Cells[(y + 1) * Field_width + x] = std::make_unique<GameObjects::Man>(x, y + 1, hp, hitbox, 1, 1);
-			Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
+		if ((y < (Field_height - 1)) && (context.GetCell(x,y+1)->IsAlive() == 0)) {
+			statistic.Coordinats_of_man[1]++;
+			context.GetCell(x,y+1) = std::make_unique<GameObjects::Man>(x, y + 1, hp, hitbox, 1, 1);
+			context.GetCell(x,y) = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
 		}
 		break;
 	
@@ -55,48 +55,48 @@ void GameObjects::Man::Move(char direction) {
 
 }
 
-void GameObjects::Man::Dead() {
-	Man_alive = 0;
-	Amount_of_injured_people--;
-	Cells[y * Field_width + x] = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
+void GameObjects::Man::Dead(Context &context, Statistic& statistic) {
+	statistic.Man_alive = 0;
+	statistic.Amount_of_injured_people--;
+	context.GetCell(x,y) = std::make_unique<GameObjects::Ground>(x, y, 9, 0, 0, 0);
 }
 
 
-void GameObjects::Man::ReactToBullet() {
+void GameObjects::Man::ReactToBullet(Context &context, Statistic& statistic) {
 	if (hp == 3)
-		Amount_of_injured_people++;
+		statistic.Amount_of_injured_people++;
 	hp--;
 	if (hp == 0)
-		Dead();
+		Dead(context, statistic);
 }
 
-void GameObjects::Man::Shoot() {
+void GameObjects::Man::Shoot(Context &context, Statistic& statistic) {
 	if (y == 0)
 		return;
-	Amount_of_bullets++;
-	if (Cells[(y - 1) * Field_width + x]->IsAlive() == 0) {
-		Cells[(y - 1) * Field_width + x] = std::make_unique<GameObjects::Bullet>(x, y - 1, hp, 1, 1, 1);
+	statistic.Amount_of_bullets++;
+	if (context.GetCell(x,y-1)->IsAlive() == 0) {
+		context.GetCell(x,y-1) = std::make_unique<GameObjects::Bullet>(x, y - 1, hp, 1, 1, 1);
 	}
 	else {
-		Cells[(y - 1) * Field_width + x]->ReactToBullet();
+		context.GetCell(x,y-1)->ReactToBullet(context, statistic);
 	}
 }
 
 
 
-void GameObjects::Man::gachi() {
+void GameObjects::Man::gachi(Context &context, Statistic& statistic) {
 	std::cout << "x == " << x << "y == " << y << std::endl;
 }
 
-void GameObjects::Man::act(char key) {
+void GameObjects::Man::act(char key, Context &context, Statistic& statistic) {
 	if (key == 'x')
 		return;
 	else
 		if (key == ' ')
-			Shoot();
+			Shoot(context, statistic);
 		else
 			if (key != ERR)
-				Move(key);
+				Move(key, context, statistic);
 }
 
 bool GameObjects::Man::IsAlive() {

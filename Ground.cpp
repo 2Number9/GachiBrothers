@@ -5,27 +5,24 @@
 GameObjects::Ground::Ground(int x, int y, int hp, bool hitbox, char amount_of_steps, bool is_a_good_guy) : x(x), y(y), hp(hp), hitbox(hitbox), amount_of_steps(amount_of_steps), is_a_good_guy(is_a_good_guy) {}
 
 void GameObjects::Ground::Draw() {
-	//GoToPos(x, y);
 	wmove(stdscr, y, x);
 	wprintw(stdscr, "-");
 }
 
-void GameObjects::Ground::Dead() {}
+void GameObjects::Ground::Dead(Context &context, Statistic& statistic) {}
 
-void GameObjects::Ground::Move(char direction) {}
+void GameObjects::Ground::Move(char direction, Context &context, Statistic& statistic) {}
 
-void GameObjects::Ground::Shoot() {}
+void GameObjects::Ground::Shoot(Context &context, Statistic& statistic) {}
 
-void GameObjects::Ground::ReactToBullet() {}
+void GameObjects::Ground::ReactToBullet(Context &context, Statistic& statistic) {}
 
 
-void GameObjects::Ground::gachi() {
+void GameObjects::Ground::gachi(Context &context, Statistic& statistic) {
 	std::cout << "x == " << x << "y == " << y << "hp == " << hp << std::endl;
 }
 
-void GameObjects::Ground::act(char key) {
-	//Draw();
-}
+void GameObjects::Ground::act(char key, Context &context, Statistic& statistic) {}
 
 bool GameObjects::Ground::IsAlive() {
 	return hitbox;
