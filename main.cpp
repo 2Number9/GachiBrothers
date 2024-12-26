@@ -4,10 +4,8 @@ int main() {
 	
 	GameObjects::Context context;
 	GameObjects::Statistic statistic;
-	GameObjects::Context& pointer_to_context = context;
-	GameObjects::Statistic& pointer_to_statistic = statistic;
 
-	GamePlay gameplay(pointer_to_context, pointer_to_statistic);
+	GamePlay gameplay(context, statistic);
 	gameplay.Run();
 	
 	return 0;

@@ -4,7 +4,7 @@
 
 class GamePlay {
 public:
-	GamePlay(GameObjects::Context &context, GameObjects::Statistic &statistic);
+	GamePlay(GameObjects::Context& context, GameObjects::Statistic& statistic);
 	~GamePlay() = default;
 	void Run();
 	void Create_Field_And_Objects();
